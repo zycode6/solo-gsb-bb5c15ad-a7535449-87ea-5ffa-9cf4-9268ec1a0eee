@@ -1,0 +1,21 @@
+services:
+  api:
+    build: .
+    image: tide-window-api
+    container_name: tide-window-api
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_PATH: /app/data/tide_windows.db
+    volumes:
+      - tide-data:/app/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+
+volumes:
+  tide-data:
